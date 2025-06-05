@@ -8,12 +8,12 @@ interface FloatingIslandProps {
   duration?: number;
 }
 
-export const FloatingIsland: React.FC<FloatingIslandProps> = ({
+const FloatingIsland = ({
   className = '',
   children,
   floatHeight = 20,
-  duration = 6,
-}) => {
+  duration = 6
+}: FloatingIslandProps) => {
   return (
     <motion.div
       className={`relative ${className}`}
@@ -29,7 +29,6 @@ export const FloatingIsland: React.FC<FloatingIslandProps> = ({
     >
       {children}
       
-      {/* Shadow Effect */}
       <motion.div
         className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-4/5 h-4 bg-blue-500/20 rounded-full blur-xl"
         animate={{
@@ -46,3 +45,5 @@ export const FloatingIsland: React.FC<FloatingIslandProps> = ({
     </motion.div>
   );
 };
+
+export default FloatingIsland;
