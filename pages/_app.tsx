@@ -1,5 +1,4 @@
-import { motion } from 'framer-motion';
-import { useState, useEffect, ReactNode } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import dynamic from 'next/dynamic';
 
 const DynamicParticles = dynamic(() => import('./ParticleSystem'), { ssr: false });
@@ -13,9 +12,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2;
-      const y = (e.clientY / window.innerHeight - 0.5) * 2;
-      setMousePosition({ x, y });
+      setMousePosition({
+        x: (e.clientX / window.innerWidth - 0.5) * 2,
+        y: (e.clientY / window.innerHeight - 0.5) * 2,
+      });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -23,9 +23,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white relative overflow-hidden">
       <DynamicParticles mousePosition={mousePosition} />
-      <main>{children}</main>
+      <main className="relative z-10">
+        {children}
+      </main>
     </div>
   );
 };
