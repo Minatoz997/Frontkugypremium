@@ -1,62 +1,38 @@
-import { useEffect, useMemo, useRef } from 'react';
-import * as THREE from 'three';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { motion } from 'framer-motion';
+import React from 'react';
 
-const Particles = ({ count = 1000, mousePosition }) => {
-  const mesh = useRef();
-  const positions = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 10;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 10;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 10;
-    }
-    return pos;
-  }, [count]);
-
-  useFrame((state) => {
-    const time = state.clock.getElapsedTime();
-    mesh.current.rotation.x = mousePosition.y * 0.2;
-    mesh.current.rotation.y = mousePosition.x * 0.2;
-  });
-
-  return (
-    <points ref={mesh}>
-      <bufferGeometry>
-        <bufferAttribute
-          attachObject={['attributes', 'position']}
-          count={positions.length / 3}
-          array={positions}
-          itemSize={3}
-        />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.02}
-        color="#4285f4"
-        transparent
-        opacity={0.6}
-        sizeAttenuation
-      />
-    </points>
-  );
+type ParticleSystemProps = {
+  mousePosition: {
+    x: number;
+    y: number;
+  };
 };
 
-const ParticleSystem = ({ count, mousePosition }) => {
+const ParticleSystem: React.FC<ParticleSystemProps> = ({ mousePosition }) => {
   return (
-    <Canvas
-      camera={{ position: [0, 0, 5], fov: 75 }}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        pointerEvents: 'none',
-      }}
-    >
-      <ambientLight intensity={0.5} />
-      <Particles count={count} mousePosition={mousePosition} />
-    </Canvas>
+    <div className="fixed inset-0 pointer-events-none">
+      {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 bg-blue-500 rounded-full"
+          animate={{
+            x: [0, Math.random() * 200 - 100],
+            y: [0, Math.random() * 200 - 100],
+            scale: [1, 0],
+            opacity: [1, 0],
+          }}
+          transition={{
+            duration: 2 + Math.random() * 2,
+            repeat: Infinity,
+            delay: Math.random() * 2,
+          }}
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+          }}
+        />
+      ))}
+    </div>
   );
 };
 
